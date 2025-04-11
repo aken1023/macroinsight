@@ -4,9 +4,10 @@
   "description": "宏觀新聞分析工具",
   "scripts": {
     "start": "streamlit run macroinsight.py",
-    "build": "pip install -r requirements.txt"
+    "build": "python -m ensurepip && python -m pip install --upgrade pip && pip install -r requirements.txt"
   },
   "engines": {
+    "python": "3.9.13",
     "node": ">=14.0.0"
   }
 }
