@@ -1,0 +1,12 @@
+{
+  "name": "macroinsight",
+  "version": "1.0.0",
+  "description": "宏觀新聞分析工具",
+  "scripts": {
+    "start": "streamlit run macroinsight.py",
+    "build": "pip install -r requirements.txt"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

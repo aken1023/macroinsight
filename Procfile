@@ -1,1 +1,1 @@
-web: streamlit run macroinsight.py
+web: npm start
