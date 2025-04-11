@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宏觀新聞分析工具</title>
+    <style>
+        /* 全局樣式 */
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: #e0e0e0;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+
+        /* 標題樣式 */
+        h1, h2, h3, h4, h5, h6 {
+            color: #00ffcc;
+            margin: 1.5rem 0;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #00ffcc;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #00ccff;
+            margin-top: 2.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #00ffcc;
+        }
+
+        /* 內容區塊樣式 */
+        .content-block {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.1);
+        }
+
+        /* 文本樣式 */
+        p, li, span {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* 輸入框樣式 */
+        textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 204, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            min-height: 150px;
+            width: 100%;
+        }
+
+        textarea:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            outline: none;
+        }
+
+        /* 按鈕樣式 */
+        button {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.1);
+            border: 2px solid #00ffcc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: rgba(0, 255, 204, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 255, 204, 0.1);
+            color: #00ffcc;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+            color: #e0e0e0;
+        }
+
+        tr:hover {
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        /* 分析結果區塊 */
+        .analysis-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .analysis-section h3 {
+            color: #00ffcc;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 影響程度標籤 */
+        .impact-label {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 0.3rem;
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
+        }
+
+        /* 圖表容器 */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        /* 提示框樣式 */
+        .alert {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        /* 成功消息樣式 */
+        .success {
+            background: rgba(0, 255, 204, 0.1);
+            color: #00ffcc;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        /* 選擇框樣式 */
+        select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            padding: 0.5rem;
+        }
+
+        /* 頁腳樣式 */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(0, 255, 204, 0.2);
+            color: #888888;
+        }
+
+        /* 響應式設計 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .content-block, .analysis-section {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            p, li, span {
+                font-size: 1rem;
+            }
+
+            button {
+                padding: 0.6rem 1.2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* 滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 204, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="content-block">
+        <h1>DBA宏觀新聞分析工具</h1>
+        <p class="info-box">通過AI深度分析宏觀經濟新聞對金融市場的潛在影響，為投資決策提供專業參考</p>
+
+        <form id="analysis-form">
+            <div class="form-group">
+                <label for="news-text">輸入宏觀經濟/金融新聞內容</label>
+                <textarea id="news-text" name="news_text" rows="8" placeholder="貼上完整的新聞文本，包括標題和正文內容"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="detailed_analysis" checked> 詳細分析
+                </label>
+                <label>
+                    <input type="checkbox" name="include_charts" checked> 包含視覺化圖表
+                </label>
+            </div>
+
+            <button type="submit">分析新聞</button>
+        </form>
+    </div>
+
+    <div id="results-container" class="content-block" style="display: none;">
+        <!-- 分析結果將在這裡動態生成 -->
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script>
+        document.getElementById('analysis-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const newsText = formData.get('news_text');
+            
+            if (!newsText) {
+                alert('請輸入新聞內容');
+                return;
+            }
+            
+            // 顯示加載狀態
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = '分析中...';
+            
+            // 發送分析請求
+            fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                // 渲染分析結果
+                renderAnalysisResults(data);
+                document.getElementById('results-container').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('分析失敗，請稍後再試');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = '分析新聞';
+            });
+        });
+        
+        function renderAnalysisResults(analysis) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '<div class="loading-animation"><div class="spinner"></div><p>分析結果載入中...</p></div>';
+            
+            // 使用GSAP實現淡入動畫
+            gsap.from(container, {duration: 0.5, opacity: 0, y: 20, ease: "power2.out"});
+            
+            // 渲染新聞重點摘要
+            if (analysis.summary) {
+                const summarySection = document.createElement('div');
+                summarySection.className = 'analysis-section';
+                summarySection.innerHTML = `
+                    <h2>新聞重點摘要</h2>
+                    <div class="row">
+                        <div class="col">
+                            <h3>核心要點</h3>
+                            <ul>
+                                ${analysis.summary.key_points.map(point => `<li>${point}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <h3>關鍵數據</h3>
+                            <ul>
+                                ${analysis.summary.key_data.map(data => `<li>${data}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(summarySection);
+            }
+            
+            // 渲染市場影響分析
+            if (analysis.market_impact) {
+                const marketImpactSection = document.createElement('div');
+                marketImpactSection.className = 'analysis-section';
+                marketImpactSection.innerHTML = `
+                    <h2>市場影響分析</h2>
+                    <h3>總體經濟影響</h3>
+                    <div class="row">
+                        <div class="col">
+                            <h4>GDP影響</h4>
+                            <p>${analysis.market_impact.macro_economy.gdp.description}</p>
+                        </div>
+                        <div class="col">
+                            <h4>通膨影響</h4>
+                            <p>${analysis.market_impact.macro_economy.inflation.description}</p>
+                        </div>
+                        <div class="col">
+                            <h4>就業影響</h4>
+                            <p>${analysis.market_impact.macro_economy.employment.description}</p>
+                        </div>
+                        <div class="col">
+                            <h4>消費影響</h4>
+                            <p>${analysis.market_impact.macro_economy.consumption.description}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // 如果有圖表數據，渲染圖表
+                if (analysis.market_impact.charts) {
+                    for (const [chartName, chartData] of Object.entries(analysis.market_impact.charts)) {
+                        const chartDiv = document.createElement('div');
+                        chartDiv.className = 'chart-container';
+                        chartDiv.id = `${chartName}-chart`;
+                        marketImpactSection.appendChild(chartDiv);
+                        
+                        Plotly.newPlot(chartDiv.id, chartData.data, chartData.layout);
+                    }
+                }
+                
+                container.appendChild(marketImpactSection);
+            }
+            
+            // 其他分析結果的渲染邏輯...
+        }
+    </script>
+</body>
+</html>
