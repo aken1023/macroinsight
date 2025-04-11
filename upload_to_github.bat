@@ -24,16 +24,16 @@ if not exist .git (
 )
 
 REM 添加遠程倉庫（如果尚未添加）
+REM 檢查並重置遠端倉庫連接
+echo 檢查遠端倉庫連接...
 git remote -v | findstr "origin" >nul
-if %ERRORLEVEL% neq 0 (
-    echo 添加遠程倉庫...
-    git remote add origin https://github.com/aken1023/macroinsight.git
-    if %ERRORLEVEL% neq 0 (
-        echo 錯誤: 無法添加遠程倉庫。
-        pause
-        exit /b 1
-    )
+if %ERRORLEVEL% == 0 (
+    echo 重置遠端倉庫連接...
+    git remote remove origin
 )
+echo 添加遠端倉庫...
+git remote add origin https://github.com/aken1023/macroinsight.git
+git remote -v
 
 REM 添加所有文件到暫存區
 echo 添加文件到暫存區...
