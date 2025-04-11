@@ -38,22 +38,26 @@ if %ERRORLEVEL% neq 0 (
 REM 添加所有文件到暫存區
 echo 添加文件到暫存區...
 git add .
-if %ERRORLEVEL% neq 0 (
-    echo 錯誤: 無法添加文件到暫存區。
-    pause
-    exit /b 1
-)
 
-REM 提交更改
-set /p commit_msg=請輸入提交信息（默認為"更新專案文件"）: 
-if "%commit_msg%"=="" set commit_msg=更新專案文件
-
-echo 提交更改...
-git commit -m "%commit_msg%"
-if %ERRORLEVEL% neq 0 (
-    echo 錯誤: 無法提交更改。
-    pause
-    exit /b 1
+REM 檢查是否有更改需要提交
+git status | findstr /C:"nothing to commit" >nul
+if %ERRORLEVEL% == 0 (
+    echo 沒有檔案需要提交，直接進行推送...
+) else (
+    REM 提交更改
+    :input_commit_message
+    set "commit_msg="
+    set /p commit_msg=請輸入提交信息（默認為"更新專案文件"）: 
+    if "%commit_msg%"=="" (
+        set "commit_msg=更新專案文件"
+    )
+    
+    echo 提交更改...
+    git commit -m "%commit_msg%"
+    if %ERRORLEVEL% neq 0 (
+        echo 提交信息不能為空，請重新輸入
+        goto input_commit_message
+    )
 )
 
 REM 推送到GitHub
