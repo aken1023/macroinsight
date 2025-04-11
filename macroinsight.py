@@ -388,7 +388,7 @@ with st.sidebar:
     )
 
 # 主页面
-st.markdown('<div class="main-header">DBA宏觀新聞分析工具</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">宏觀新聞分析工具</div>', unsafe_allow_html=True)
 st.markdown('<div class="info-box">通過AI深度分析宏觀經濟新聞對金融市場的潛在影響，為企業投資與決策提供專業參考</div>',
             unsafe_allow_html=True)
 
@@ -1085,6 +1085,6 @@ if st.button("分析新聞", disabled=not news_text):
                 )
 
 # 添加頁腳
-st.markdown('<div class="footer">作者:© 2025 AKEN | 基於AI模型</div>',
+st.markdown('<div class="footer">作者:© 2025 AKEN | 基於HAI模型</div>',
             unsafe_allow_html=True)
 
