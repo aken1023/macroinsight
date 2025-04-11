@@ -1,1 +1,1 @@
-web: npm start
+web: streamlit run macroinsight.py --server.port $PORT
