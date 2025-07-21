@@ -6,6 +6,10 @@ from datetime import datetime
 import pandas as pd
 import plotly.graph_objects as go
 import time
+from dotenv import load_dotenv
+
+# 載入 .env 文件
+load_dotenv()
 
 # 設置 Streamlit 端口
 os.environ['STREAMLIT_SERVER_PORT'] = '8877'
@@ -37,235 +41,254 @@ st.set_page_config(
 # 自定義 CSS 樣式
 st.markdown("""
 <style>
-    /* 全局樣式 */
+    /* 全局樣式 - 小清新風格 */
     [data-testid="stAppViewContainer"] {
-        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        background: linear-gradient(135deg, #f8fdff, #e8f4f8);
         max-width: 1400px;
         margin: 0 auto;
         padding: 2rem;
-        color: #e0e0e0;
+        color: #2c3e50;
+        font-family: 'Microsoft JhengHei', 'PingFang SC', sans-serif;
     }
 
-    /* 標題樣式 */
+    /* 標題樣式 - 溫和清新 */
     h1, h2, h3, h4, h5, h6 {
-        color: #00ffcc;
+        color: #34495e;
         font-family: 'Microsoft JhengHei', sans-serif;
         margin: 1.5rem 0;
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        font-weight: 500;
     }
 
     h1 {
         font-size: 2.5rem;
         text-align: center;
         padding-bottom: 1rem;
-        border-bottom: 2px solid #00ffcc;
+        border-bottom: 3px solid #3498db;
         margin-bottom: 2rem;
+        color: #2980b9;
+        background: linear-gradient(90deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     h2 {
-        font-size: 2rem;
-        color: #00ccff;
-        margin-top: 2.5rem;
+        font-size: 1.8rem;
+        color: #27ae60;
+        margin-top: 2rem;
+        position: relative;
+    }
+
+    h2:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, #3498db, #2ecc71);
+        border-radius: 2px;
     }
 
     h3 {
-        font-size: 1.5rem;
-        color: #00ffcc;
+        font-size: 1.4rem;
+        color: #16a085;
     }
 
-    /* 內容區塊樣式 */
+    /* 內容區塊樣式 - 清新卡片風格 */
     .content-block {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 204, 0.2);
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        border-radius: 15px;
         padding: 2rem;
         margin: 1.5rem 0;
+        box-shadow: 0 8px 30px rgba(52, 152, 219, 0.1);
         backdrop-filter: blur(10px);
-        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.1);
     }
 
-    /* 文本樣式 */
+    /* 文本樣式 - 清新可讀 */
     p, li, span {
-        color: #e0e0e0;
+        color: #34495e;
         font-size: 1.1rem;
         line-height: 1.8;
         font-family: 'Microsoft JhengHei', sans-serif;
     }
 
-    /* 輸入框樣式 */
+    /* 輸入框樣式 - 清新風格 */
     .stTextArea > div > div > textarea {
-        background: rgba(255, 255, 255, 0.05);
-        border: 2px solid rgba(0, 255, 204, 0.3);
-        border-radius: 8px;
-        padding: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(52, 152, 219, 0.3);
+        border-radius: 12px;
+        padding: 1.2rem;
         font-size: 1.1rem;
-        color: #e0e0e0;
+        color: #2c3e50;
         min-height: 150px;
         font-family: 'Microsoft JhengHei', sans-serif;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
     }
 
     .stTextArea > div > div > textarea:focus {
-        border-color: #00ffcc;
-        box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+        border-color: #3498db;
+        box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        outline: none;
     }
 
-    /* 按鈕樣式 */
+    /* 按鈕樣式 - 清新漸變 */
     .stButton > button {
         width: 100%;
         max-width: 300px;
-        padding: 0.8rem 1.5rem;
+        padding: 0.9rem 1.8rem;
         font-size: 1.1rem;
-        color: #00ffcc;
-        background: rgba(0, 255, 204, 0.1);
-        border: 2px solid #00ffcc;
-        border-radius: 8px;
+        color: white;
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        border: none;
+        border-radius: 25px;
         cursor: pointer;
         transition: all 0.3s ease;
         font-family: 'Microsoft JhengHei', sans-serif;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
     }
 
     .stButton > button:hover {
-        background: rgba(0, 255, 204, 0.2);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+        background: linear-gradient(135deg, #2980b9, #27ae60);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
     }
 
-    /* 表格樣式 */
+    /* 表格樣式 - 清新風格 */
     .dataframe {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
         margin: 1.5rem 0;
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(52, 152, 219, 0.1);
     }
 
     .dataframe th {
-        background: rgba(0, 255, 204, 0.1);
-        color: #00ffcc;
-        font-weight: 600;
+        background: linear-gradient(135deg, #74b9ff, #55efc4);
+        color: white;
+        font-weight: 500;
         padding: 1rem;
         text-align: left;
-        border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+        border: none;
     }
 
     .dataframe td {
         padding: 1rem;
-        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
-        color: #e0e0e0;
+        border-bottom: 1px solid rgba(52, 152, 219, 0.1);
+        color: #2c3e50;
+        background: rgba(255, 255, 255, 0.8);
     }
 
     .dataframe tr:hover {
-        background: rgba(0, 255, 204, 0.05);
+        background: rgba(116, 185, 255, 0.1);
     }
 
-    /* 側邊欄樣式 */
+    /* 隱藏側邊欄 */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a1a, #2d2d2d);
-        padding: 2rem;
-        border-right: 1px solid rgba(0, 255, 204, 0.2);
+        display: none !important;
     }
 
-    [data-testid="stSidebar"] .block-container {
-        padding-top: 2rem;
-    }
-
-    [data-testid="stSidebar"] h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid rgba(0, 255, 204, 0.3);
-    }
-
-    /* 分析結果區塊 */
+    /* 分析結果區塊 - 清新卡片風格 */
     .analysis-section {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 204, 0.2);
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(116, 185, 255, 0.2);
+        border-radius: 16px;
         padding: 2rem;
         margin: 2rem 0;
+        box-shadow: 0 8px 30px rgba(116, 185, 255, 0.15);
         backdrop-filter: blur(10px);
     }
 
     .analysis-section h3 {
-        color: #00ffcc;
-        border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+        color: #16a085;
+        border-bottom: 2px solid rgba(22, 160, 133, 0.3);
         padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
     }
 
-    /* 影響程度標籤 */
+    /* 影響程度標籤 - 清新風格 */
     .impact-label {
         display: inline-block;
-        padding: 0.4rem 1rem;
-        border-radius: 6px;
-        font-weight: 600;
+        padding: 0.5rem 1.2rem;
+        border-radius: 20px;
+        font-weight: 500;
         margin: 0.3rem;
-        background: rgba(0, 255, 204, 0.1);
-        border: 1px solid rgba(0, 255, 204, 0.3);
-        color: #00ffcc;
+        background: linear-gradient(135deg, #74b9ff, #55efc4);
+        border: none;
+        color: white;
+        box-shadow: 0 2px 10px rgba(116, 185, 255, 0.2);
     }
 
-    /* 圖表容器 */
+    /* 圖表容器 - 清新風格 */
     [data-testid="stPlotlyChart"] {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 204, 0.2);
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(116, 185, 255, 0.2);
+        border-radius: 16px;
         padding: 1.5rem;
         margin: 1.5rem 0;
+        box-shadow: 0 6px 25px rgba(116, 185, 255, 0.1);
         backdrop-filter: blur(10px);
     }
 
-    /* 提示框樣式 */
+    /* 提示框樣式 - 清新風格 */
     .stAlert {
-        background: rgba(255, 255, 255, 0.05);
-        color: #e0e0e0;
-        border: 1px solid rgba(0, 255, 204, 0.2);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #2c3e50;
+        border: 1px solid rgba(116, 185, 255, 0.3);
+        border-radius: 12px;
         padding: 1rem;
+        box-shadow: 0 4px 15px rgba(116, 185, 255, 0.1);
     }
 
-    /* 成功消息樣式 */
+    /* 成功消息樣式 - 清新風格 */
     .success {
-        background: rgba(0, 255, 204, 0.1);
-        color: #00ffcc;
-        border: 1px solid rgba(0, 255, 204, 0.3);
-        border-radius: 8px;
+        background: linear-gradient(135deg, #55efc4, #81ecec);
+        color: white;
+        border: none;
+        border-radius: 12px;
         padding: 1rem;
+        box-shadow: 0 4px 15px rgba(85, 239, 196, 0.2);
     }
 
-    /* 選擇框樣式 */
+    /* 選擇框樣式 - 清新風格 */
     .stSelectbox > div > div {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 204, 0.3);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(116, 185, 255, 0.3);
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(116, 185, 255, 0.1);
     }
 
     .stSelectbox > div > div > div {
-        color: #e0e0e0;
+        color: #2c3e50;
     }
 
-    /* 頁腳樣式 */
+    /* 頁腳樣式 - 清新風格 */
     .footer {
         text-align: center;
         padding: 2rem;
         margin-top: 3rem;
-        border-top: 1px solid rgba(0, 255, 204, 0.2);
-        color: #888888;
+        border-top: 1px solid rgba(116, 185, 255, 0.2);
+        color: #7f8c8d;
+        background: linear-gradient(135deg, 
+                                    rgba(255,255,255,0.1), 
+                                    rgba(116, 185, 255, 0.05));
+        border-radius: 16px 16px 0 0;
     }
 
-    /* 數據指標樣式 */
+    /* 數據指標樣式 - 清新風格 */
     [data-testid="stMetricValue"] {
-        color: #00ffcc !important;
+        color: #16a085 !important;
         font-size: 1.5rem !important;
-        font-weight: bold !important;
+        font-weight: 600 !important;
     }
 
     [data-testid="stMetricDelta"] {
-        color: #00ccff !important;
+        color: #27ae60 !important;
         font-size: 1rem !important;
     }
 
@@ -363,40 +386,117 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 側邊欄設置
-with st.sidebar:
-    st.markdown("## 設置")
-    api_key = "sk-c961aa5ea66e43a2a28e72d8c00d8cbe"
-    st.success("API Key 已配置")
+# 從 .env 文件讀取 API Key（不顯示在UI中）
+api_key = os.getenv("DeepSeek_API")
 
-    st.markdown("## 分析選項")
-    detailed_analysis = st.checkbox("詳細分析", value=True, help="啟用更深入的分析")
-    include_charts = st.checkbox("包含視覺化圖表", value=True, help="生成影響視覺化圖表")
-
-    st.markdown("## 關於")
-    st.info(
-        "是一款專業的宏觀新聞分析工具，"
-        "利用AI模型分析宏觀經濟新聞對金融市場的潛在影響。"
-        "\n\n該工具提供對影響時長、方向、力度和消退指標的專業評估。"
-    )
-
-    st.markdown("### 使用指南")
-    st.markdown(
-        "1. 粘貼宏觀經濟或金融新聞內容\n"
-        "2. 點擊'分析新聞'按鈕\n"
-        "3. 查看詳細的多維度分析結果"
-    )
+# 預設分析選項
+detailed_analysis = True
+include_charts = True
 
 # 主页面
-st.markdown('<div class="main-header">宏觀新聞分析工具</div>', unsafe_allow_html=True)
-st.markdown('<div class="info-box">通過AI深度分析宏觀經濟新聞對金融市場的潛在影響，為企業投資與決策提供專業參考</div>',
-            unsafe_allow_html=True)
+st.markdown('<h1>🌸 宏觀新聞分析工具</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="content-block">💡 通過AI深度分析宏觀經濟新聞對金融市場的潛在影響，'
+    '為企業投資與決策提供專業參考</div>',
+    unsafe_allow_html=True
+)
+
+# 檢查API Key狀態
+if not api_key:
+    st.error("⚠️ 未找到 DeepSeek API Key，請檢查 .env 文件配置")
+    st.info("📋 請確保 .env 文件中包含：\nDeepSeek_API=\"您的API密鑰\"")
+
+# 台灣今日重要新聞列表
+st.markdown("## 📰 今日台灣重要新聞")
+st.markdown("*點選新聞標題即可進行分析*")
+
+# 定義新聞數據
+taiwan_news = [
+    {
+        "title": "TSMC 計劃建設四個新廠房，2028年底正式投產2奈米晶片",
+        "content": ("台積電計劃今年底開始建設四個新廠房，目標在2028年底正式投產2奈米半導體晶圓。"
+                    "中科管理局局長許茂新在中科22週年慶祝活動上宣布，園區第二期擴建將先建設滯洪池等水土保持設施。"
+                    "台積電已正式租用土地，中科已交付。四個廠房位於中科園區，編號為Fab 25，"
+                    "將包含四座1.4奈米晶圓製造廠。這項投資將進一步鞏固台灣在全球半導體產業的領導地位。"),
+        "category": "科技"
+    },
+    {
+        "title": "台股開戶數創新高，儘管面臨美國關稅威脅",
+        "content": ("台灣證券交易所數據顯示，上個月股票交易開戶數達到1348萬戶的新高，"
+                   "較5月底增加約3.2萬戶，較年初增加26.4萬戶。"
+                   "儘管市場受到川普關稅政策影響，投資人情緒仍保持活躍。"
+                   "61歲以上投資者開戶數增長最多，上半年增加22.5萬戶，佔總開戶數的29.92%。"
+                   "今年上半年台股下跌779.08點，但投資人參與度依然提升。"),
+        "category": "金融"
+    },
+    {
+        "title": "央行總裁楊金龍：投機推升新台幣急升",
+        "content": ("央行總裁楊金龍表示，市場投機是新台幣急升的主因，"
+                   "呼籲出口商和金融機構保持冷靜，避免恐慌性拋售美元。"
+                   "新台幣兌美元收盤大漲0.919元至30.145元，盤中最高升至29.59元。"
+                   "楊金龍強調，匯率並非美台貿易談判議程，否認存在馬阿拉哥協議。"
+                   "台灣第一季GDP表現優於預期，加上美國經濟疲軟跡象，促使全球資金回流新興市場。"),
+        "category": "貨幣政策"
+    },
+    {
+        "title": "中華經濟研究院上調年度GDP成長預測至3.05%",
+        "content": ("中華經濟研究院將今年GDP成長預測上調至3.05%，基於上半年強勁表現，"
+                   "但警告美國關稅威脅可能拖累下半年成長動能。"
+                   "院長連賢明表示，上半年表現異常強勁，出口激增34.1%，民間投資成長7.03%，超出預期。"
+                   "然而川普政策的不可預測性為經濟前景帶來下行風險。"),
+        "category": "經濟預測"
+    },
+    {
+        "title": "美國批准Nvidia對中國銷售H20 GPU",
+        "content": ("Nvidia執行長黃仁勳宣布，川普政府已批准該公司向中國銷售用於AI開發的先進H20圖形處理器。"
+                   "這項決定在Nvidia部落格文章中公布，黃仁勳也在中國官方媒體上談論此事。"
+                   "美國政府向Nvidia保證將發放許可證，公司希望儘快開始交付。"
+                   "中國企業在消息公布後立即搶購H20 GPU。"),
+        "category": "科技貿易"
+    },
+    {
+        "title": "川普準備實施產業特定關稅",
+        "content": ("美國總統川普準備在下週五實施產業特定關稅，銅製品將面臨50%關稅。"
+                   "這些關稅將與針對100多個國家的「對等」關稅同時生效。"
+                   "川普表示可能在月底對製藥業實施關稅，半導體關稅也可能很快實施。"
+                   "台積電曾警告，對台灣半導體的關稅可能減少晶片需求，危及其在亞利桑那州165億美元的投資計劃。"),
+        "category": "貿易政策"
+    }
+]
+
+# 創建新聞選擇區域
+selected_news = None
+cols = st.columns(2)
+
+for i, news in enumerate(taiwan_news):
+    col = cols[i % 2]
+    with col:
+        if st.button(
+            f"📑 {news['title'][:50]}{'...' if len(news['title']) > 50 else ''}",
+            key=f"news_{i}",
+            help=f"類別：{news['category']}"
+        ):
+            selected_news = news
+
+# 如果有選擇的新聞，自動填入分析區域
+if selected_news:
+    st.success(f"✅ 已選擇新聞：{selected_news['title']}")
+    news_content = f"""
+**新聞標題：** {selected_news['title']}
+**新聞類別：** {selected_news['category']}
+
+**新聞內容：**
+{selected_news['content']}
+"""
+else:
+    news_content = ""
 
 # 新闻输入区域
 news_text = st.text_area(
     "輸入宏觀經濟/金融新聞內容",
+    value=news_content,
     height=200,
-    help="粘貼完整的新聞文本，包括標題和正文內容"
+    help="粘貼完整的新聞文本，包括標題和正文內容，或點選上方新聞進行分析"
 )
 
 def analyze_news(news_text):
@@ -588,9 +688,11 @@ def analyze_news(news_text):
         return None
 
 # 分析按钮
-if st.button("分析新聞", disabled=not news_text):
+if st.button("分析新聞", disabled=not news_text or not api_key):
     if not news_text:
         st.error("請輸入新聞內容")
+    elif not api_key:
+        st.error("請輸入 DeepSeek API Key")
     else:
         with st.spinner("正在進行深度分析，請稍候..."):
             analysis = analyze_news(news_text)
